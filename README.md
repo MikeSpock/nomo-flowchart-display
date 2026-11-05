@@ -10,7 +10,7 @@ What the page does:
 - **Viewer**: wheel/pinch zoom, drag to pan, a minimap, search (⌘K), a details panel per node, animated flow, light and dark themes, SVG and PNG export.
 - **Self-check**: an optional headless-Chrome pass screenshots the page and fails on edge crossings, overlapping lines, labels on lines and text overflowing its box.
 
-It also renders branch recaps, plans and code walkthroughs from a `data.json`, and can run as a Claude Code skill (`SKILL.md`).
+It also renders branch recaps, plans and code walkthroughs from a `data.json`, and can run as a Claude Code skill (see [Claude Code skill](#claude-code-skill)).
 
 ## Requirements
 
@@ -57,6 +57,16 @@ The full contract is in [references/schema.md](references/schema.md): swimlanes,
 | `facts [--base REF]` | Print git facts for a recap |
 | `detect` | Suggest a mode for the current repo |
 | `check page.html` | Run the headless-Chrome check on a rendered page |
+
+## Claude Code skill
+
+[skill/SKILL.md](skill/SKILL.md) turns this into the `/visual` skill: recap a branch, picture a plan, or map a codebase or skill pack. Install it with:
+
+```bash
+skill/install.sh
+```
+
+This copies the skill and the renderer to `~/.claude/skills/visual/`. Pass a folder to install somewhere else, e.g. `skill/install.sh .claude/skills` for one project.
 
 ## Examples
 
