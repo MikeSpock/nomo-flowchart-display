@@ -15,7 +15,7 @@ It also renders branch recaps, plans and code walkthroughs from a `data.json`, a
 ## Install
 
 ```bash
-npm install github:MikeSpock/nomo-flowchart-display
+npm install nomo-flowchart-display
 ```
 
 Requires Node 18.17+. The package has no runtime dependencies. Layout baking and the self-check use Google Chrome or Chromium when one is installed (set `CHROME_PATH` to pick a binary); without one, pages still render, with the layout computed in the browser on load.

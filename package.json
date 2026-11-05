@@ -8,6 +8,10 @@
 		"type": "git",
 		"url": "git+https://github.com/MikeSpock/nomo-flowchart-display.git"
 	},
+	"homepage": "https://github.com/MikeSpock/nomo-flowchart-display#readme",
+	"bugs": {
+		"url": "https://github.com/MikeSpock/nomo-flowchart-display/issues"
+	},
 	"keywords": [
 		"flowchart",
 		"diagram",
@@ -48,6 +52,7 @@
 		"build": "tsc -p tsconfig.json",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
 		"prepare": "npm run build",
+		"prepublishOnly": "npm run build",
 		"example": "node dist/cli.js render --map examples/checkout/map.json --out examples/checkout/index.html --no-open"
 	},
 	"devDependencies": {
