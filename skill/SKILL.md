@@ -5,13 +5,13 @@ description: Turn the current work into one polished, self-contained HTML visual
 
 # /visual
 
-One command, one page. You write a `data.json`; `scripts/visual.py render` injects it into `assets/template.html`, which draws everything inline (SVG diagrams, file map, diffs) with no build step and no runtime CDN. Paths below are relative to this skill's folder; run the script from inside the project being visualised.
+One command, one page. You write a `data.json`; `dist/cli.js render` injects it into `assets/template.html`, which draws everything inline (SVG diagrams, file map, diffs) with no build step and no runtime CDN. Paths below are relative to this skill's folder; run the script from inside the project being visualised.
 
 ## Pick the mode
 
 An argument wins: `/visual recap [base]`, `/visual plan [file]`, `/visual map [skills-dir or map.json]`, `/visual <path or thing>` (explore).
 
-With no argument, run `python3 scripts/visual.py detect` and take the first that holds:
+With no argument, run `node dist/cli.js detect` and take the first that holds:
 
 1. A plan was drafted in this conversation and not yet built → **plan**, from that text.
 2. `suggested` is `recap` (branch ahead of base, or uncommitted changes) → **recap**.
@@ -22,19 +22,19 @@ Say the chosen mode and its source in one line, then keep going.
 
 ## Run it
 
-1. **Gather.** Recap: `python3 scripts/visual.py facts [--base REF]`, then read `git diff <mergeBase>` once, in order, taking notes; scope is the whole work unit of this conversation. Plan: read the plan and the real files it names. Explore: read the target; hand wide sweeps to a sub-agent.
+1. **Gather.** Recap: `node dist/cli.js facts [--base REF]`, then read `git diff <mergeBase>` once, in order, taking notes; scope is the whole work unit of this conversation. Plan: read the plan and the real files it names. Explore: read the target; hand wide sweeps to a sub-agent.
 2. **Write `data.json`** in the scratchpad, following `references/schema.md` and the section bar in `references/sections.md`.
-3. **Render:** `python3 scripts/visual.py render data.json`. It prints `{"out", "bytes", "missingHunks", "check"}` and opens the page. Fix each missing hunk (wrong path or `contains`) and re-render.
-4. **Check.** `render` runs `visual.py check` in headless Chrome: light and dark screenshots (plus one drilled-in view for a map), and an audit of every diagram or view: edge crossings, edges sharing a line, labels lying on a line or a node, and text overflowing its box (`check.counts`). Exit 2 means a problem: move nodes (`col`/`row`, or a view `layout`), cut edges a view does not need, shorten labels, and re-render. Read the PNGs it lists; a broken diagram or empty section means fix and re-render. `--no-check` skips it; `--shots DIR` picks where the PNGs go.
+3. **Render:** `node dist/cli.js render data.json`. It prints `{"out", "bytes", "missingHunks", "check"}` and opens the page. Fix each missing hunk (wrong path or `contains`) and re-render.
+4. **Check.** `render` runs `dist/cli.js check` in headless Chrome: light and dark screenshots (plus one drilled-in view for a map), and an audit of every diagram or view: edge crossings, edges sharing a line, labels lying on a line or a node, and text overflowing its box (`check.counts`). Exit 2 means a problem: move nodes (`col`/`row`, or a view `layout`), cut edges a view does not need, shorten labels, and re-render. Read the PNGs it lists; a broken diagram or empty section means fix and re-render. `--no-check` skips it; `--shots DIR` picks where the PNGs go.
 5. **Reply** with the path, the mode, and a 1–3 line gist. Offer to publish it as an Artifact (the page is fully inline); publish only on a yes.
 
 ## Map mode: a drill-down map
 
 For a skill pack or any system with nested levels. The page is a clean flowchart, light first with a dark mode: one top bar (breadcrumbs, ⌘K search over nodes and views, theme, export, keys), a column browser of views on the left, the map in the middle, and a short details strip under it (header, then When to use · What it is · How it works · Example · Behind the scenes tabs). Wheel or pinch zooms, drag pans, the minimap moves the camera, a click opens the details, and double-click or Enter on a stacked node zooms into its inner view. Run-order views get swimlanes (Ask → Check → Fix → Finish …) when their parts name the phase. Breadcrumbs, Esc, and the browser back button go up; `#view=<id>&node=<id>` deep-links. On a phone the details become a bottom sheet.
 
-1. **Skeleton.** `python3 scripts/visual.py skillmap <skills-dir> --deep --out map.json` reads SKILL.md frontmatter, `families.json`, `/skill` mentions, referenced scripts, and `hooks/settings-snippet.json`; `--deep` follows every external skill into the skills it triggers. Not a skill pack? Write `map.json` by hand.
+1. **Skeleton.** `node dist/cli.js skillmap <skills-dir> --deep --out map.json` reads SKILL.md frontmatter, `families.json`, `/skill` mentions, referenced scripts, and `hooks/settings-snippet.json`; `--deep` follows every external skill into the skills it triggers. Not a skill pack? Write `map.json` by hand.
 2. **Enrich.** Read the skills and fill every node's `what`, `when`, `how`, and real `source` — the panel shows all four, so none stays empty. Main steps first: keep process views to roughly four to six columns, set `mainSteps: true`, and move scripts, state, and policies into a step’s child view. Every original node stays reachable. Hub views keep comb connectors. Mark outside skills `kind: external` with `author` (GitHub login) and add `authors`; `render` embeds their avatars. Fix edges and give each view a short `caption`. `references/schema.md` § Map model is the contract.
-3. **Render:** `python3 scripts/visual.py render --map map.json`. It searches each view for a crossing-free layout and bakes it into the page, then runs the check. Publishing the page (GitHub Pages)? Add `--source-base https://github.com/OWNER/REPO/blob/main/` (and `--source-root <dir>` when the hosted repo is a subfolder) so Source links open the hosted file. Finish with steps 4–5 of Run it.
+3. **Render:** `node dist/cli.js render --map map.json`. It searches each view for a crossing-free layout and bakes it into the page, then runs the check. Publishing the page (GitHub Pages)? Add `--source-base https://github.com/OWNER/REPO/blob/main/` (and `--source-root <dir>` when the hosted repo is a subfolder) so Source links open the hosted file. Finish with steps 4–5 of Run it.
 
 ## Rules
 

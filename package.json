@@ -1,0 +1,57 @@
+{
+	"name": "nomo-flowchart-display",
+	"version": "0.1.0",
+	"description": "Interactive flowchart pages from a JSON file: layered layout, orthogonal routing, drill-down views, one self-contained HTML file.",
+	"license": "MIT",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/MikeSpock/nomo-flowchart-display.git"
+	},
+	"keywords": [
+		"flowchart",
+		"diagram",
+		"graph",
+		"svg",
+		"visualization",
+		"claude-code"
+	],
+	"engines": {
+		"node": ">=18.17"
+	},
+	"bin": {
+		"nomo-flowchart": "dist/cli.js"
+	},
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./core": {
+			"types": "./dist/core.d.ts",
+			"default": "./dist/core.js"
+		},
+		"./template.html": "./assets/template.html",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src",
+		"assets",
+		"references",
+		"skill",
+		"THIRD_PARTY_NOTICES.md"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"prepare": "npm run build",
+		"example": "node dist/cli.js render --map examples/checkout/map.json --out examples/checkout/index.html --no-open"
+	},
+	"devDependencies": {
+		"@types/node": "^26.6.6",
+		"typescript": "^7.0.2"
+	}
+}

@@ -3,9 +3,9 @@
 ## EricTechPro/super-board (`skills/visual`)
 
 This project is a fork of the `/visual` skill from super-board, taken at commit
-`d0b7d5a6850614ca809477c1af43d5d7da408726`. `assets/template.html`,
-`scripts/visual.py`, `references/` and `skill/SKILL.md` started as copies of the files
-in `skills/visual/`; `examples/super-board-skill-map.json` is super-board's own
+`d0b7d5a6850614ca809477c1af43d5d7da408726`. `assets/template.html`, `references/`
+and `skill/SKILL.md` started as copies of the files in `skills/visual/`; `src/` is a
+TypeScript port of its `scripts/visual.py`. `examples/super-board-skill-map.json` is super-board's own
 skill map, kept as a large example. super-board is MIT-licensed; its copyright
 line is carried in `LICENSE`.
 

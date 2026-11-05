@@ -4,3 +4,6 @@ __pycache__/
 .visual/
 _tmp/
 shots/
+node_modules/
+dist/
+examples/**/index.html

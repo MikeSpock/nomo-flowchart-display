@@ -76,7 +76,7 @@ Every document diagram also gets the camera: drag to pan, pinch or Ctrl/⌘ + sc
 
 ## Map model (`render --map`)
 
-The drill-down map takes its own file: shared nodes and edges, plus views that each show a subset. `visual.py skillmap` writes a skeleton of it.
+The drill-down map takes its own file: shared nodes and edges, plus views that each show a subset. `nomo-flowchart skillmap` writes a skeleton of it.
 
 ```jsonc
 {
