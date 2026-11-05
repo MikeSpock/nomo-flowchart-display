@@ -1,0 +1,109 @@
+{
+	"title": "Checkout flow",
+	"root": "overview",
+	"nodes": [
+		{
+			"id": "cart",
+			"label": "Cart",
+			"kind": "public",
+			"sublabel": "user reviews items",
+			"what": "The page where a shopper reviews items and starts checkout.",
+			"when": "The shopper clicks **Checkout**.",
+			"how": "Sends the cart id to the checkout API and redirects to the payment step."
+		},
+		{
+			"id": "checkout-api",
+			"label": "Checkout API",
+			"kind": "lane",
+			"sublabel": "prices · stock · tax",
+			"opensView": "checkout-api",
+			"what": "Server endpoint that turns a cart into a priced order.",
+			"when": "Called by the cart page with a cart id.",
+			"how": "Validates stock, prices the order, computes tax, then ==creates a pending order== and a payment intent."
+		},
+		{
+			"id": "payments",
+			"label": "Payment provider",
+			"kind": "external",
+			"what": "Third-party card processor.",
+			"when": "The API creates a payment intent; the shopper confirms on the payment step.",
+			"how": "Charges the card and calls back through a webhook."
+		},
+		{
+			"id": "webhook",
+			"label": "Payment webhook",
+			"kind": "hook",
+			"what": "Receives the provider's payment result.",
+			"when": "The provider confirms or fails a charge.",
+			"how": "Marks the order paid or failed and queues the confirmation email."
+		},
+		{
+			"id": "orders-db",
+			"label": "Orders DB",
+			"kind": "board",
+			"what": "Order records and their status.",
+			"when": "Written at order creation and on every payment result.",
+			"how": "One row per order: `pending` → `paid` | `failed`."
+		},
+		{
+			"id": "email",
+			"label": "Confirmation email",
+			"kind": "script",
+			"what": "Background job that emails the receipt.",
+			"when": "An order turns `paid`.",
+			"how": "Renders the receipt template and sends it through the mail service."
+		},
+		{
+			"id": "stock-check",
+			"label": "Stock check",
+			"kind": "script",
+			"what": "Confirms every line item is still in stock.",
+			"when": "First step of the checkout API.",
+			"how": "Reads inventory per SKU and rejects the cart if any item is short."
+		},
+		{
+			"id": "pricing",
+			"label": "Pricing",
+			"kind": "script",
+			"what": "Applies list prices and discounts.",
+			"when": "After the stock check passes.",
+			"how": "Looks up current prices and applies any coupon on the cart."
+		},
+		{
+			"id": "tax",
+			"label": "Tax",
+			"kind": "script",
+			"what": "Computes tax for the shipping address.",
+			"when": "After pricing.",
+			"how": "Calls the tax table for the address region."
+		}
+	],
+	"edges": [
+		{ "id": "e1", "from": "cart", "to": "checkout-api", "label": "starts" },
+		{ "id": "e2", "from": "checkout-api", "to": "payments", "label": "creates intent" },
+		{ "id": "e3", "from": "checkout-api", "to": "orders-db", "label": "writes pending" },
+		{ "id": "e4", "from": "payments", "to": "webhook", "label": "calls back" },
+		{ "id": "e5", "from": "webhook", "to": "orders-db", "label": "marks paid" },
+		{ "id": "e6", "from": "webhook", "to": "email", "label": "queues" },
+		{ "id": "e7", "from": "stock-check", "to": "pricing", "label": "then" },
+		{ "id": "e8", "from": "pricing", "to": "tax", "label": "then" }
+	],
+	"views": [
+		{
+			"id": "overview",
+			"parent": null,
+			"title": "Checkout",
+			"caption": "From cart to paid order",
+			"nodeIds": ["cart", "checkout-api", "payments", "webhook", "orders-db", "email"]
+		},
+		{
+			"id": "checkout-api",
+			"parent": "overview",
+			"title": "Checkout API",
+			"caption": "What happens inside one checkout call",
+			"render": "sequence",
+			"lanes": false,
+			"nodeIds": ["stock-check", "pricing", "tax"]
+		}
+	]
+}
